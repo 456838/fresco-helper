@@ -210,7 +210,9 @@ public class Attacher implements IAttacher, View.OnTouchListener, OnScaleDragGes
             int vh = getViewHeight();
             float heightScale = vh / (float) mImageInfoHeight;
             mMatrix.reset();
-            mMatrix.setScale(widthScale, widthScale, 0, 0);
+            RectF rect = getDisplayRect(getDrawMatrix());
+            float w1  = rect.right-rect.left;
+            mMatrix.setScale(getViewWidth()/w1,getViewWidth()/w1);
             checkMatrixAndInvalidate();
         }
     }
