@@ -1,0 +1,50 @@
+// export JAVA_HOME=/Applications/Android\ Studio.app/Contents/jre/jdk/Contents/Home
+
+//./gradlew install
+//./gradlew bintrayUpload
+
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        google()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.0'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+        google()
+
+        maven {
+            url 'https://dl.bintray.com/hpdx/maven/'
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+ext {
+    buildToolsVersion = '27.0.3'
+    compileSdkVersion = 27
+
+    minSdk = 18
+    targetSdk = 22
+
+    // Libraries Version Code
+    supportLibVersion = '27.1.1'
+
+    frescoVersion = '1.11.0'
+    SSIVVersion = '3.10.0'
+    frescoHelperVersion = '2.1.6'
+
+}
