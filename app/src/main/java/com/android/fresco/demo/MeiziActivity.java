@@ -5,7 +5,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
 
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.fresco.helper.CustomScaleTypes;
 import com.facebook.fresco.helper.ImageLoader;
 import com.facebook.fresco.helper.utils.DensityUtil;
 
@@ -26,6 +29,8 @@ public class MeiziActivity extends AppCompatActivity {
         ViewGroup.LayoutParams lvp = simpleDraweeView.getLayoutParams();
         lvp.width = DensityUtil.getDisplayWidth(this);
         simpleDraweeView.setAspectRatio(0.6f); // 设置宽高比
+        GenericDraweeHierarchy hierarchy = simpleDraweeView.getHierarchy();
+        hierarchy.setActualImageScaleType(CustomScaleTypes.FIT_X);
 
         ImageLoader.loadDrawable(simpleDraweeView, R.drawable.meizi,
                 DensityUtil.getDisplayWidth(this), DensityUtil.getDisplayHeight(this));

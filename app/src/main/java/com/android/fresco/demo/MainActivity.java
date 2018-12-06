@@ -24,6 +24,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+        findViewById(R.id.btn_super_image).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, SuperImageActivity.class));
+            }
+        });
         findViewById(R.id.btn_load_local_bitmap).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_clear_memory).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Phoenix.clearCaches();
-                ((Button)findViewById(R.id.btn_get_cache_size)).setText("获取已使用的缓存大小");
+                Phoenix.clearCaches();
+                ((Button) findViewById(R.id.btn_get_cache_size)).setText("获取已使用的缓存大小");
             }
         });
 
@@ -86,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 long cacheSize = Phoenix.getMainDiskStorageCacheSize();
                 MLog.i("cacheSize = " + cacheSize);
-                ((Button)findViewById(R.id.btn_get_cache_size)).setText("缓存:" + (cacheSize/1024) + "kb");
+                ((Button) findViewById(R.id.btn_get_cache_size)).setText("缓存:" + (cacheSize / 1024) + "kb");
             }
         });
 
@@ -186,12 +193,12 @@ public class MainActivity extends AppCompatActivity {
         Phoenix.with(context)
                 .setUrl(url)
                 .setResult(new IResult<Bitmap>() {
-            @Override
-            public void onResult(Bitmap result) {
-                // 在主线程
+                    @Override
+                    public void onResult(Bitmap result) {
+                        // 在主线程
 
-            }
-        }).load();
+                    }
+                }).load();
     }
 
     public void downloadImageGif(Context context) {

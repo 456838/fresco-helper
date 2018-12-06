@@ -14,12 +14,17 @@ import android.view.ViewGroup;
 
 import com.anbetter.log.MLog;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.facebook.common.internal.Supplier;
+import com.facebook.common.references.CloseableReference;
 import com.facebook.common.util.UriUtil;
+import com.facebook.datasource.DataSource;
+import com.facebook.datasource.SimpleDataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.fresco.helper.CustomScaleTypes;
 import com.facebook.fresco.helper.LargePhotoView;
 import com.facebook.fresco.helper.Phoenix;
 import com.facebook.fresco.helper.R;
@@ -31,8 +36,10 @@ import com.facebook.fresco.helper.photoview.photodraweeview.OnViewTapListener;
 import com.facebook.fresco.helper.photoview.photodraweeview.PhotoDraweeView;
 import com.facebook.fresco.helper.utils.DensityUtil;
 import com.facebook.imagepipeline.core.ImagePipeline;
+import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -121,6 +128,9 @@ public class PictureBrowseAdapter extends PagerAdapter {
                     .path(photoInfo.originalUrl)
                     .build();
         }
+        ImageRequestBuilder builder = ImageRequestBuilder.newBuilderWithSource(uri);
+        builder.setLocalThumbnailPreviewsEnabled(true);
+        // controller.setDataSourceSupplier()
         controller.setUri(uri);
 
         GenericDraweeHierarchy hierarchy = photoDraweeView.getHierarchy();
@@ -137,7 +147,7 @@ public class PictureBrowseAdapter extends PagerAdapter {
                 return super.onLevelChange(progress);
             }
         });
-
+        // controller.setDataSourceSupplier()
         controller.setOldController(photoDraweeView.getController());
         controller.setControllerListener(new BaseControllerListener<ImageInfo>() {
             @Override
@@ -146,9 +156,11 @@ public class PictureBrowseAdapter extends PagerAdapter {
                 if (imageInfo == null) {
                     return;
                 }
-                photoDraweeView.setLongPicScale(true);
+                // photoDraweeView.setLongPicScale(true);
                 photoDraweeView.update(imageInfo.getWidth(), imageInfo.getHeight());
                 // photoDraweeView.setScale(1.5f);
+                GenericDraweeHierarchy hierarchy = photoDraweeView.getHierarchy();
+                hierarchy.setActualImageScaleType(CustomScaleTypes.FIT_X);
             }
 
             @Override
