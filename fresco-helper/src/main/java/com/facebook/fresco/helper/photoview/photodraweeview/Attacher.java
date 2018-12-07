@@ -203,7 +203,12 @@ public class Attacher implements IAttacher, View.OnTouchListener, OnScaleDragGes
         mImageInfoWidth = imageInfoWidth;
         mImageInfoHeight = imageInfoHeight;
         updateBaseMatrix();
-        if (fitLongPicScale) {
+
+    }
+
+
+    @Override
+    public void setLongPicScale(boolean longPicScale) {
             int vw = getViewWidth();
             float widthScale;
             widthScale = vw / (float) mImageInfoWidth;
@@ -211,17 +216,9 @@ public class Attacher implements IAttacher, View.OnTouchListener, OnScaleDragGes
             float heightScale = vh / (float) mImageInfoHeight;
             mMatrix.reset();
             RectF rect = getDisplayRect(getDrawMatrix());
-            float w1  = rect.right-rect.left;
-            mMatrix.setScale(getViewWidth()/w1,getViewWidth()/w1);
+            float w1 = rect.right - rect.left;
+            mMatrix.setScale(getViewWidth() / w1, getViewWidth() / w1);
             checkMatrixAndInvalidate();
-        }
-    }
-
-    boolean fitLongPicScale;
-
-    @Override
-    public void setLongPicScale(boolean longPicScale) {
-        fitLongPicScale = longPicScale;
     }
 
     private static void checkZoomLevels(float minZoom, float midZoom, float maxZoom) {

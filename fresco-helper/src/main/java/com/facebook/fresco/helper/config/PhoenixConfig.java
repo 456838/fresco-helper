@@ -164,7 +164,7 @@ public class PhoenixConfig {
 
             return ImagePipelineConfig.newBuilder(mContext)
                     .setBitmapsConfig(Bitmap.Config.ARGB_8888) // 若不是要求忒高清显示应用，就用使用RGB_565吧（默认是ARGB_8888)
-                    .setDownsampleEnabled(true) // 在解码时改变图片的大小，支持PNG、JPG以及WEBP格式的图片，与ResizeOptions配合使用
+                    .setDownsampleEnabled(false) // 在解码时改变图片的大小，支持PNG、JPG以及WEBP格式的图片，与ResizeOptions配合使用
 //                    .setProgressiveJpegConfig(new ProgressiveJpegConfig() { // 设置Jpeg格式的图片支持渐进式显示
 //                        @Override
 //                        public int getNextScanNumberToDecode(int scanNumber) {

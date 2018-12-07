@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/FrescoUtils.iml" filepath="$PROJECT_DIR$/FrescoUtils.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/fresco-helper.iml" filepath="$PROJECT_DIR$/.idea/fresco-helper.iml" />
-      <module fileurl="file://$PROJECT_DIR$/fresco-helper/fresco-helper.iml" filepath="$PROJECT_DIR$/fresco-helper/fresco-helper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fresco-helper.iml" filepath="$PROJECT_DIR$/fresco-helper.iml" />
       <module fileurl="file://$PROJECT_DIR$/fresco-helper/fresco-helper-fresco-helper.iml" filepath="$PROJECT_DIR$/fresco-helper/fresco-helper-fresco-helper.iml" />
     </modules>
   </component>

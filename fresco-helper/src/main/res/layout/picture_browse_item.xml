@@ -13,6 +13,7 @@
         <!--android:visibility="gone"-->
         <!--app:actualImageScaleType="centerCrop"/>-->
 
+
     <com.facebook.fresco.helper.photoview.loading.LoadingProgressBarView
         android:id="@+id/progress_view"
         android:layout_width="60dp"
