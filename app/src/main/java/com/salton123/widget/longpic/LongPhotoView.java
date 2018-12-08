@@ -1,17 +1,19 @@
-package com.android.fresco.demo;
+package com.salton123.widget.longpic;
 
+import android.content.Context;
 import android.graphics.drawable.Animatable;
 import android.net.Uri;
-import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.android.fresco.demo.R;
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -20,7 +22,6 @@ import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.imagepipeline.image.ImageInfo;
-import com.salton123.widget.longpic.BitmapFetcher;
 import com.salton123.widget.longpic.listener.IFetchResult;
 import com.salton123.widget.photo.PhotoDraweeView;
 
@@ -28,34 +29,66 @@ import java.io.File;
 
 /**
  * User: newSalton@outlook.com
- * Date: 2018/12/6 下午10:10
- * ModifyTime: 下午10:10
- * Description:
+ * Date: 2018/12/8 下午2:50
+ * ModifyTime: 下午2:50
+ * Description:解决超大图和超长图无法显示以及内存泄漏等问题
  */
-public class SuperImageActivity extends AppCompatActivity {
+public class LongPhotoView extends FrameLayout {
     private SubsamplingScaleImageView longPicView;
     private PhotoDraweeView thumbnailView;
     private ProgressBar progressView;
-    private FrameLayout rootView;
-    String thumbnailUrl = "https://photo.zastatic.com/images/photo/27252/109007273/9396485883607195.png?imageMogr2/format/jpg/quality/85/thumbnail/120x120";
-    final String url = "https://photo.zastatic.com/images/photo/27252/109007273/9396485883607195.png?imageMogr2/format/jpg/quality/85";
-    // String url = "https://photo.zastatic.com/images/photo/27252/109007273/9396485883607195.png?imageMogr2/format/webp/quality/85";
-    // String url = "http://ww3.sinaimg.cn/large/610dc034jw1f6m4aj83g9j20zk1hcww3.jpg";
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_super_image);
-        rootView = findViewById(R.id.rootView);
+    public LongPhotoView(@NonNull Context context) {
+        super(context);
+        initView();
+    }
+
+    public LongPhotoView(@NonNull Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        initView();
+    }
+
+    public LongPhotoView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        initView();
+    }
+
+    private void initView() {
+        View.inflate(getContext(), R.layout.stub_long_photo_view, this);
         progressView = findViewById(R.id.progressView);
         longPicView = findViewById(R.id.longPicView);
         longPicView.setMaxScale(10);
-        longPicView.setMinScale(1);
-        longPicView.setDebug(true);
+        // longPicView.setDebug(true);
         thumbnailView = findViewById(R.id.thumbnailView);
         thumbnailView.setLongPicScale(true);
+    }
+
+    public void setImage(Uri thumbnailUri, Uri photoUri) {
+        if (photoUri == null) {
+            throw new IllegalArgumentException("photoUri can not be null");
+        } else {
+            if (thumbnailUri != null) {
+                initThumbnailView(thumbnailUri);
+            }
+            initPhotoView(photoUri);
+        }
+
+    }
+
+    public void setImage(String thumbnailUrl, String photoUrl) {
+        if (TextUtils.isEmpty(photoUrl)) {
+            throw new IllegalArgumentException("photoUrl can not be null");
+        } else {
+            if (thumbnailUrl != null) {
+                initThumbnailView(Uri.parse(thumbnailUrl));
+            }
+            initPhotoView(Uri.parse(photoUrl));
+        }
+    }
+
+    private void initThumbnailView(Uri thumbnailUri) {
         PipelineDraweeControllerBuilder builder = Fresco.newDraweeControllerBuilder();
-        builder.setUri(thumbnailUrl)
+        builder.setUri(thumbnailUri)
                 .setOldController(thumbnailView.getController())
                 .setControllerListener(new BaseControllerListener<ImageInfo>() {
                     @Override
@@ -64,10 +97,8 @@ public class SuperImageActivity extends AppCompatActivity {
                         if (imageInfo == null) {
                             return;
                         }
-
                         Log.e("aa", "onFinalImageSet" + imageInfo.getWidth() + ",height=" + imageInfo.getHeight());
                         thumbnailView.update(imageInfo.getWidth(), imageInfo.getHeight());
-
                     }
 
                     @Override
@@ -75,7 +106,6 @@ public class SuperImageActivity extends AppCompatActivity {
                         super.onIntermediateImageSet(id, imageInfo);
                         Log.e("aa", "onFinalImageSet" + imageInfo.getWidth() + ",height=" + imageInfo.getHeight());
                         thumbnailView.update(imageInfo.getWidth(), imageInfo.getHeight());
-
                     }
                 });
         GenericDraweeHierarchy hierarchy = thumbnailView.getHierarchy();
@@ -86,25 +116,20 @@ public class SuperImageActivity extends AppCompatActivity {
             }
         });
         thumbnailView.setController(builder.build());
-        BitmapFetcher.downloadImage(SuperImageActivity.this, Uri.parse(url), new IFetchResult() {
+    }
+
+    private void initPhotoView(Uri photoUri) {
+        BitmapFetcher.downloadImage(getContext(), photoUri, new IFetchResult() {
             @Override
             public void onResult(String result) {
                 if (!TextUtils.isEmpty(result)) {
                     Log.e("aa", "result=" + result + ",size=" + new File(result).length());
                     longPicView.setImage(ImageSource.uri(result));
                     longPicView.setVisibility(View.VISIBLE);
-                    rootView.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressView.setVisibility(View.GONE);
-                            thumbnailView.setVisibility(View.GONE);
-                            rootView.removeView(progressView);
-                            rootView.removeView(thumbnailView);
-                        }
-                    },500);
                     longPicView.setMinimumScaleType(SubsamplingScaleImageView.SCALE_TYPE_START);
+                    postDelayed(clearMission, 500);
                 } else {
-                    Toast.makeText(getApplicationContext(), "图片下载失败", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "图片下载失败", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -115,10 +140,19 @@ public class SuperImageActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Fresco.getImagePipeline().clearCaches();
-    }
+    private Runnable clearMission = new Runnable() {
+        @Override
+        public void run() {
+            progressView.setVisibility(View.GONE);
+            thumbnailView.setVisibility(View.GONE);
+            removeView(progressView);
+            removeView(thumbnailView);
+        }
+    };
 
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        removeCallbacks(clearMission);
+    }
 }

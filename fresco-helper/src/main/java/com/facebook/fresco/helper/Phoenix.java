@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.facebook.cache.common.CacheKey;
+import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.controller.ControllerListener;
@@ -17,6 +19,8 @@ import com.facebook.fresco.helper.listener.IDownloadResult;
 import com.facebook.fresco.helper.listener.IResult;
 import com.facebook.fresco.helper.utils.CircleBitmapTransform;
 import com.facebook.fresco.helper.utils.ImageFileUtils;
+import com.facebook.imagepipeline.cache.CountingMemoryCache;
+import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.ImageInfo;

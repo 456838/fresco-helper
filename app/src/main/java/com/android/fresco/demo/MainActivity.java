@@ -24,11 +24,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         findViewById(R.id.btn_super_image).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, SuperImageActivity.class));
+                startActivity(new Intent(MainActivity.this, LongPhotoViewActivity.class));
             }
         });
         findViewById(R.id.btn_load_local_bitmap).setOnClickListener(new View.OnClickListener() {

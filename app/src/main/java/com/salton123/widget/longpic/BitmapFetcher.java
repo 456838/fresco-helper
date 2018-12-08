@@ -4,7 +4,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.FrameStats;
 
+import com.android.fresco.demo.okhttp3.OkHttpNetworkFetcher;
 import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.CacheKey;
 import com.facebook.cache.disk.FileCache;
@@ -16,12 +18,17 @@ import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.BaseDataSubscriber;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.info.ImagePerfData;
+import com.facebook.drawee.backends.pipeline.info.ImagePerfDataListener;
+import com.facebook.drawee.backends.pipeline.info.internal.ImagePerfImageOriginListener;
 import com.facebook.fresco.helper.utils.ImageFileUtils;
 import com.facebook.fresco.helper.utils.StreamTool;
 import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
+import com.facebook.imagepipeline.core.ProducerFactory;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.producers.NetworkFetchProducer;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.salton123.widget.longpic.listener.IFetchResult;
@@ -49,6 +56,18 @@ public class BitmapFetcher {
         if (localCache != null && localCache.exists()) {
             loadFileResult.onResult(localCache.getAbsolutePath());
         } else {
+            // ImagePipelineFactory.getInstance().getEncodedMemoryCache().
+            Fresco.newDraweeControllerBuilder().setPerfDataListener(new ImagePerfDataListener() {
+                @Override
+                public void onImageLoadStatusUpdated(ImagePerfData imagePerfData, int imageLoadStatus) {
+                    Log.e("aa", "mImageRequest=" + imagePerfData.getImageRequest().toString());
+                }
+
+                @Override
+                public void onImageVisibilityUpdated(ImagePerfData imagePerfData, int visibilityState) {
+
+                }
+            });
             // 获取未解码的图片数据
             DataSource<CloseableReference<PooledByteBuffer>> dataSource = imagePipeline.fetchEncodedImage(imageRequest, context);
             dataSource.subscribe(new BaseDataSubscriber<CloseableReference<PooledByteBuffer>>() {
@@ -77,6 +96,7 @@ public class BitmapFetcher {
                                 inputStream = new PooledByteBufferInputStream(pooledByteBuffer);
                                 final String photoPath = getImageDownloadPath(ImageFileUtils.getFileName(uri.getEncodedPath()));
                                 outputStream = new FileOutputStream(photoPath);
+
                                 IOUtils.copy(inputStream, outputStream);
                                 loadFileResult.onResult(photoPath);
                             } catch (Exception e) {

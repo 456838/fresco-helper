@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.salton123.widget.longpic.LongPhotoView
+        android:id="@+id/longPhotoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></com.salton123.widget.longpic.LongPhotoView>
+</LinearLayout>
